@@ -41,6 +41,7 @@ Follow these steps to run the project locally:
 
 ## Credits
 
-Made by Jumbo.
-Note: Jumbo  is a subuser of phravins repository
-
+Made by Jumbo
+-------------
+(Note: Jumbo  is a subuser of phravins repository)
+--------------------------------------------------
