@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { Canvas, useFrame, type ThreeEvent } from '@react-three/fiber';
-
+import { gsap } from 'gsap';
 import * as THREE from 'three';
 
-// Basic Error Boundary to catch WebGL crashes
+
 class WebGLErrorBoundary extends React.Component<
   { children: React.ReactNode; fallback: React.ReactNode },
   { hasError: boolean }
@@ -40,14 +40,14 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
   const [hovered, setHovered] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
 
-  // Hover animation
+
   useFrame((state: any) => {
     if (boxRef.current && !isOpening) {
       boxRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
       boxRef.current.position.y = hovered ? Math.sin(state.clock.elapsedTime * 2) * 0.1 : 0;
     }
 
-    // Ribbon floating animation
+
     if (ribbonRef.current && !isOpening) {
       ribbonRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 1.5) * 0.05;
     }
@@ -59,10 +59,10 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
     setIsOpening(true);
 
 
-    // Animate ribbon unwrapping
+
     if (ribbonRef.current) {
 
-      // Ribbon falls away
+
       gsap.to(ribbonRef.current.position, {
         y: -3,
         duration: 0.8,
@@ -84,10 +84,10 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
       });
     }
 
-    // Box shakes then opens
+
     if (boxRef.current) {
 
-      // Shake effect
+
       gsap.to(boxRef.current.position, {
         x: 0.1,
         duration: 0.05,
@@ -95,7 +95,7 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
         repeat: 5
       });
 
-      // Lid pops open
+
       if (lidRef.current) {
         gsap.to(lidRef.current.position, {
           y: 2,
@@ -111,7 +111,7 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
         });
       }
 
-      // Box glows and fades
+
       gsap.to(boxRef.current.scale, {
         x: 1.2,
         y: 1.2,
@@ -131,50 +131,44 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
       ref={boxRef}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
+      onClick={(e) => { e.stopPropagation(); handleClick(); }}
     >
-      {/* Gift Box Base */}
-      {/* Gift Box Base */}
+
+      <mesh visible={false}>
+        <boxGeometry args={[3, 3, 3]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+
+
       <mesh
         position={[0, 0, 0]}
-        onClick={(e: ThreeEvent<MouseEvent>) => {
-          e.stopPropagation();
-          handleClick();
-        }}
       >
         <boxGeometry args={[2, 1.5, 2]} />
         <meshStandardMaterial
-          color="#1a1a2e"
+          color="#1E90FF"
           roughness={0.3}
           metalness={0.1}
         />
       </mesh>
 
-      {/* Gift Box Lid */}
+
       <mesh
         ref={lidRef}
         position={[0, 0.9, 0]}
-        onClick={(e: ThreeEvent<MouseEvent>) => {
-          e.stopPropagation();
-          handleClick();
-        }}
       >
         <boxGeometry args={[2.1, 0.3, 2.1]} />
         <meshStandardMaterial
-          color="#0f0f1e"
+          color="#4169E1"
           roughness={0.3}
           metalness={0.1}
         />
       </mesh>
 
-      {/* Vertical Ribbon */}
+
       <group ref={ribbonRef}>
-        {/* Front ribbon */}
+
         <mesh
           position={[0, 0, 0]}
-          onClick={(e: ThreeEvent<MouseEvent>) => {
-            e.stopPropagation();
-            handleClick();
-          }}
         >
           <boxGeometry args={[0.15, 1.8, 2.1]} />
           <meshStandardMaterial
@@ -184,13 +178,9 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
           />
         </mesh>
 
-        {/* Side ribbons */}
+
         <mesh
           position={[0, 0, 0]}
-          onClick={(e: ThreeEvent<MouseEvent>) => {
-            e.stopPropagation();
-            handleClick();
-          }}
         >
           <boxGeometry args={[2.1, 1.8, 0.15]} />
           <meshStandardMaterial
@@ -200,7 +190,7 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
           />
         </mesh>
 
-        {/* Ribbon Bow - Top */}
+
         <mesh position={[0, 1.2, 0]}>
           <boxGeometry args={[0.8, 0.4, 0.4]} />
           <meshStandardMaterial
@@ -210,7 +200,7 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
           />
         </mesh>
 
-        {/* Bow loops */}
+
         <mesh position={[-0.4, 1.2, 0]} rotation={[0, 0, Math.PI * 0.25]}>
           <boxGeometry args={[0.3, 0.3, 0.8]} />
           <meshStandardMaterial color="#b91c1c" roughness={0.2} metalness={0.3} />
@@ -221,7 +211,7 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
         </mesh>
       </group>
 
-      {/* Sparkle effects */}
+
       {[...Array(8)].map((_, i) => (
         <mesh
           key={i}
@@ -241,44 +231,45 @@ function AnimatedGiftBox({ onOpen }: GiftBox3DProps) {
   );
 }
 
-// Scene lighting and environment
+
 function Scene({ onOpen }: GiftBox3DProps) {
   return (
     <>
-      <ambientLight intensity={0.4} />
+      <color attach="background" args={['#ffc0cb']} />
+      <ambientLight intensity={0.8} />
       <directionalLight
-        position={[5, 5, 5]}
-        intensity={1.5}
+        position={[5, 10, 5]}
+        intensity={1.2}
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
       />
-      <pointLight position={[-5, 5, -5]} intensity={0.5} color="#dc2626" />
-      <pointLight position={[5, 5, 5]} intensity={0.3} color="#FFD700" />
+      <pointLight position={[-5, 5, -5]} intensity={0.6} color="#fff" />
+      <pointLight position={[5, 5, 5]} intensity={0.5} color="#FFD700" />
 
       <AnimatedGiftBox onOpen={onOpen} />
 
-      {/* Ground plane */}
+
       <mesh
         position={[0, -2, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
         receiveShadow
         onClick={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation();
-          onOpen();
+
         }}
       >
         <planeGeometry args={[50, 50]} />
-        <meshStandardMaterial color="#0a0a0a" roughness={0.8} />
+        <meshStandardMaterial color="#ffc0cb" roughness={0.8} />
       </mesh>
 
-      {/* Environment */}
-      <fog attach="fog" args={['#0a0a0a', 5, 20]} />
+
+      <fog attach="fog" args={['#ffc0cb', 5, 20]} />
     </>
   );
 }
 
-// Helper to detect WebGL support before crashing
+
 const isWebGLAvailable = () => {
   try {
     const canvas = document.createElement('canvas');
@@ -310,7 +301,7 @@ export default function GiftBox3D({ onOpen }: GiftBox3DProps) {
         <div style={{ fontSize: '100px', marginBottom: '20px' }}>🎁</div>
         <h2 style={{ color: 'white', fontFamily: 'sans-serif' }}>Tap to Open!</h2>
         <p style={{ color: '#aaa', marginTop: '10px' }}>(2D Mode)</p>
-        {/* Full screen click layer */}
+
         <div
           style={{
             position: 'absolute',
@@ -352,7 +343,7 @@ export default function GiftBox3D({ onOpen }: GiftBox3DProps) {
           camera={{ position: [0, 2, 6], fov: 50 }}
           shadows
           gl={{ antialias: true, alpha: false }}
-          style={{ pointerEvents: 'none' }}
+          // style={{ pointerEvents: 'none' }} // REMOVED THIS: blocking events
           onCreated={({ gl }) => {
             if (!gl.getContext()) throw new Error("No WebGL Context");
           }}
@@ -360,117 +351,7 @@ export default function GiftBox3D({ onOpen }: GiftBox3DProps) {
           <Scene onOpen={onOpen} />
         </Canvas>
       </WebGLErrorBoundary>
-      {/* Fallback Interaction Layer - Guarantees click works even if 3D fails completely */}
-      <div
-        onClick={() => onOpen()}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 5,
-          cursor: 'pointer'
-        }}
-        title="Tap to open!"
-      />
+
     </div>
   );
 }
-
-// Simple GSAP-like animation helper
-const gsap = {
-  to: (target: any, props: any) => {
-    const {
-      duration = 1,
-      ease = 'linear',
-      onComplete,
-      yoyo = false,
-      repeat = 0,
-      delay = 0,
-      ...animProps
-    } = props;
-
-    const startValues: any = {};
-
-    // Store start values (including nested objects)
-    Object.keys(animProps).forEach(key => {
-      if (target[key] !== undefined) {
-        if (typeof target[key] === 'object' && target[key] !== null) {
-          startValues[key] = {};
-          Object.keys(animProps[key] || {}).forEach(subKey => {
-            startValues[key][subKey] = target[key][subKey];
-          });
-        } else {
-          startValues[key] = target[key];
-        }
-      }
-    });
-
-    const startAnimation = () => {
-      let startTime = Date.now();
-      let repeatCount = 0;
-      let isReversing = false;
-
-      const animate = () => {
-        const elapsed = (Date.now() - startTime) / 1000;
-        let progress = Math.min(elapsed / duration, 1);
-
-        // Apply easing
-        if (ease.includes('power2')) {
-          if (ease.includes('in')) {
-            progress = progress * progress;
-          } else if (ease.includes('out')) {
-            progress = 1 - Math.pow(1 - progress, 2);
-          }
-        } else if (ease.includes('back')) {
-          // Simple back easing approximation
-          const c1 = 1.70158;
-          const c3 = c1 + 1;
-          progress = 1 + c3 * Math.pow(progress - 1, 3) + c1 * Math.pow(progress - 1, 2);
-        }
-
-        // Reverse progress if yoyo and reversing
-        const animProgress = (yoyo && isReversing) ? 1 - progress : progress;
-
-        // Interpolate values
-        Object.keys(animProps).forEach(key => {
-          if (target[key] !== undefined && typeof target[key] === 'object' && target[key] !== null) {
-            Object.keys(animProps[key] || {}).forEach(subKey => {
-              const start = startValues[key]?.[subKey] || 0;
-              const end = animProps[key][subKey];
-              target[key][subKey] = start + (end - start) * animProgress;
-            });
-          } else if (target[key] !== undefined) {
-            const start = startValues[key] || 0;
-            const end = animProps[key];
-            target[key] = start + (end - start) * animProgress;
-          }
-        });
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else if (yoyo && repeatCount < repeat) {
-          // Toggle direction for yoyo
-          isReversing = !isReversing;
-          if (isReversing) {
-            repeatCount++;
-          }
-          startTime = Date.now();
-          requestAnimationFrame(animate);
-        } else if (onComplete) {
-          onComplete();
-        }
-      };
-
-      requestAnimationFrame(animate);
-    };
-
-    // Handle delay
-    if (delay > 0) {
-      setTimeout(startAnimation, delay * 1000);
-    } else {
-      startAnimation();
-    }
-  }
-};

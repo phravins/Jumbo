@@ -5,11 +5,9 @@ import Cake3D from './components/Cake3D';
 import './App.css';
 
 type Scene = 1 | 2 | 3 | 4 | 5 | 6;
-
-// Generate audio data URLs
 const unwrapSound = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
 
-const birthdaySong = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
+const birthdaySong = '/Piano.mpeg.mp3';
 
 const cheerSound = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
 
@@ -18,8 +16,9 @@ function App() {
   const [cakeSliced, setCakeSliced] = useState(false);
   const [messageDisplayed, setMessageDisplayed] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
-  // Refs for GSAP animations
+
   const giftContainerRef = useRef<HTMLDivElement>(null);
   const elephantRef = useRef<HTMLDivElement>(null);
   const speechBubbleRef = useRef<HTMLDivElement>(null);
@@ -27,11 +26,18 @@ function App() {
   const messageRef = useRef<HTMLDivElement>(null);
   const finaleConfettiRef = useRef<HTMLDivElement>(null);
 
-  // Audio refs
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const backgroundMusicRef = useRef<HTMLAudioElement | null>(null);
 
-  // Play sound effect
+
+  useEffect(() => {
+    backgroundMusicRef.current = new Audio(birthdaySong);
+    backgroundMusicRef.current.loop = true;
+    backgroundMusicRef.current.volume = 0.5;
+  }, []);
+
+
   const playSound = (type: 'unwrap' | 'birthday' | 'cheer') => {
     if (!audioEnabled) return;
 
@@ -46,29 +52,46 @@ function App() {
       audio.volume = type === 'birthday' ? 0.4 : 0.6;
       audio.play().catch(() => { });
     } catch (e) {
-      // Fallback for CORS - use oscillator
-      if (audioContextRef.current) {
-        const oscillator = audioContextRef.current.createOscillator();
-        const gainNode = audioContextRef.current.createGain();
-
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContextRef.current.destination);
-
-        oscillator.frequency.setValueAtTime(type === 'unwrap' ? 800 : 600, audioContextRef.current.currentTime);
-        gainNode.gain.setValueAtTime(0.1, audioContextRef.current.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContextRef.current.currentTime + 0.5);
-
-        oscillator.start(audioContextRef.current.currentTime);
-        oscillator.stop(audioContextRef.current.currentTime + 0.5);
-      }
+      console.error("Audio play failed", e);
     }
   };
 
-  // Scene 1: Gift opening - handled by GiftBox3D component
+
+  const toggleMusic = () => {
+    if (!backgroundMusicRef.current) return;
+
+    if (isMusicPlaying) {
+      backgroundMusicRef.current.pause();
+      setIsMusicPlaying(false);
+    } else {
+      // Resume context if needed (browsers need this sometimes)
+      if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+        audioContextRef.current.resume();
+      }
+
+      backgroundMusicRef.current.play()
+        .then(() => {
+          setIsMusicPlaying(true);
+          setAudioEnabled(true);
+        })
+        .catch(e => console.error("Music play failed:", e));
+    }
+  };
+
+
   const openGift = () => {
+
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+    if (audioContextRef.current.state === 'suspended') {
+      audioContextRef.current.resume();
+    }
+
     setAudioEnabled(true);
     playSound('unwrap');
-    // GiftBox3D handles its own animation, then calls this
+
+
     setTimeout(() => {
       if (giftContainerRef.current) {
         gsap.to(giftContainerRef.current, {
@@ -82,10 +105,10 @@ function App() {
     }, 2000);
   };
 
-  // Scene 2: Elephant entrance with bouquet
+
   useEffect(() => {
     if (currentScene === 2 && elephantRef.current && speechBubbleRef.current) {
-      // Elephant enters from right
+
       gsap.fromTo(elephantRef.current,
         { x: '100vw', xPercent: -50, scale: 0.8 },
         {
@@ -117,17 +140,20 @@ function App() {
         }
       );
 
-      // Start background music
-      if (audioEnabled && !backgroundMusicRef.current) {
-        backgroundMusicRef.current = new Audio(birthdaySong);
-        backgroundMusicRef.current.loop = true;
-        backgroundMusicRef.current.volume = 0.3;
-        backgroundMusicRef.current.play().catch(() => { });
+
+
+      if (audioEnabled && !isMusicPlaying) {
+
+        if (backgroundMusicRef.current) {
+          backgroundMusicRef.current.play()
+            .then(() => setIsMusicPlaying(true))
+            .catch(err => console.log("Auto-play blocked", err));
+        }
       }
     }
   }, [currentScene, audioEnabled]);
 
-  // Move to scene 3
+
   const proceedToCake = () => {
     if (elephantRef.current && speechBubbleRef.current) {
       gsap.to(speechBubbleRef.current, {
@@ -148,7 +174,7 @@ function App() {
     }
   };
 
-  // Scene 3: Cake arrival
+
   useEffect(() => {
     if (currentScene === 3 && elephantRef.current) {
       // Reset elephant position with cake
@@ -169,14 +195,14 @@ function App() {
     }
   }, [currentScene]);
 
-  // Scene 4: Cake cutting - handled by Cake3D component
+
   const cutCake = () => {
     if (cakeSliced) return;
 
     playSound('cheer');
     setCakeSliced(true);
 
-    // Trigger confetti
+
     if (cakeContainerRef.current) {
       createConfetti();
     }
@@ -220,7 +246,7 @@ function App() {
     }
   };
 
-  // Scene 5: Final message
+
   useEffect(() => {
     if (currentScene === 5 && messageRef.current) {
       // Elephant comes to front
@@ -251,7 +277,7 @@ function App() {
     }
   }, [currentScene]);
 
-  // Scene 6: Party finale
+
   useEffect(() => {
     if (currentScene === 6 && finaleConfettiRef.current) {
       // Create massive confetti burst
@@ -299,19 +325,14 @@ function App() {
     }
   };
 
-  // Reset function for replay
+
   const resetExperience = () => {
     setCurrentScene(1);
     setCakeSliced(false);
     setMessageDisplayed(false);
-    setAudioEnabled(false);
 
-    if (backgroundMusicRef.current) {
-      backgroundMusicRef.current.pause();
-      backgroundMusicRef.current = null;
-    }
 
-    // Reset all elements
+
     gsap.set([elephantRef.current], { clearProps: 'all' });
     gsap.set(elephantRef.current, { x: 0, scale: 1 });
     gsap.set([speechBubbleRef.current, messageRef.current], { opacity: 0, scale: 0.5 });
@@ -319,7 +340,12 @@ function App() {
 
   return (
     <div className="birthday-container">
-      {/* Scene 1: 3D Gift Opening */}
+
+      <button className="music-toggle-btn" onClick={toggleMusic} aria-label="Toggle Music">
+        {isMusicPlaying ? '🔊' : '🔇'}
+      </button>
+
+
       {currentScene === 1 && (
         <div className="scene scene-1" ref={giftContainerRef}>
           <div className="scene-overlay">
@@ -344,7 +370,7 @@ function App() {
         </div>
       )}
 
-      {/* Scene 2: Elephant with Bouquet */}
+
       {currentScene === 2 && (
         <div className="scene scene-2">
           <div ref={elephantRef} className="elephant-container">
@@ -357,7 +383,7 @@ function App() {
         </div>
       )}
 
-      {/* Scene 3: Cake Arrival */}
+
       {currentScene === 3 && (
         <div className="scene scene-3">
           <div className="elephant-group">
@@ -372,7 +398,7 @@ function App() {
         </div>
       )}
 
-      {/* Scene 4: 3D Interactive Cake Cutting */}
+
       {currentScene === 4 && (
         <div className="scene scene-4" ref={cakeContainerRef}>
           <div className="scene-overlay">
@@ -385,7 +411,7 @@ function App() {
         </div>
       )}
 
-      {/* Scene 5: Final Birthday Message */}
+
       {currentScene === 5 && (
         <div className="scene scene-5">
           <div ref={elephantRef} className={`elephant-final ${messageDisplayed ? 'message-displayed' : ''}`}>
@@ -406,7 +432,7 @@ function App() {
         </div>
       )}
 
-      {/* Scene 6: Party Finale */}
+
       {currentScene === 6 && (
         <div className="scene scene-6">
           <div className="finale-content">
@@ -420,7 +446,7 @@ function App() {
         </div>
       )}
 
-      {/* Audio enable hint */}
+
       {!audioEnabled && currentScene === 1 && (
         <div className="audio-hint">
           <p>🔊 Tap anywhere to enable sound</p>

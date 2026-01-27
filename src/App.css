@@ -1,8 +1,3 @@
-/* =====================================
-   BIRTHDAY WISH WEBSITE - MAIN STYLES
-   ===================================== */
-
-/* Reset and base styles */
 * {
   margin: 0;
   padding: 0;
@@ -22,7 +17,7 @@ body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Main container */
+
 .birthday-container {
   width: 100vw;
   height: 100vh;
@@ -30,7 +25,7 @@ body {
   overflow: hidden;
 }
 
-/* Scene base styles */
+
 .scene {
   width: 100%;
   height: 100%;
@@ -43,12 +38,10 @@ body {
   overflow: hidden;
 }
 
-/* =====================================
-   SCENE 1: 3D GIFT OPENING
-   ===================================== */
+
 
 .scene-1 {
-  background: radial-gradient(circle at center, #1a1a2e 0%, #000 100%);
+  background: radial-gradient(circle at center, #ffc0cb 0%, #ffb6c1 100%);
   position: relative;
 }
 
@@ -64,7 +57,7 @@ body {
 
 .scene-title {
   color: #fff;
-  font-size: clamp(1.5rem, 5vw, 3rem);
+  font-size: clamp(2rem, 6vw, 3.5rem);
   font-weight: bold;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   margin-bottom: 10px;
@@ -121,9 +114,7 @@ body {
   }
 }
 
-/* =====================================
-   SCENE 2: ELEPHANT WITH BOUQUET
-   ===================================== */
+
 
 .scene-2 {
   background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
@@ -173,16 +164,14 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   color: #333;
-  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  font-size: clamp(1.1rem, 3.5vw, 1.5rem);
   text-align: center;
   font-weight: bold;
   width: 80%;
   line-height: 1.4;
 }
 
-/* =====================================
-   SCENE 3: CAKE ARRIVAL
-   ===================================== */
+
 
 .scene-3 {
   background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
@@ -256,18 +245,14 @@ body {
   }
 }
 
-/* =====================================
-   SCENE 4: 3D INTERACTIVE CAKE CUTTING
-   ===================================== */
+
 
 .scene-4 {
   background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
   position: relative;
 }
 
-/* =====================================
-   SCENE 5: FINAL BIRTHDAY MESSAGE
-   ===================================== */
+
 
 .scene-5 {
   background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
@@ -349,7 +334,7 @@ body {
   max-height: 90%;
   overflow-y: auto;
   color: #333;
-  font-size: clamp(0.8rem, 2vw, 0.95rem);
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   line-height: 1.5;
   text-align: center;
 }
@@ -372,9 +357,7 @@ body {
   font-weight: bold;
 }
 
-/* =====================================
-   SCENE 6: PARTY FINALE
-   ===================================== */
+
 
 .scene-6 {
   background: radial-gradient(circle at center, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
@@ -456,9 +439,7 @@ body {
   overflow: hidden;
 }
 
-/* =====================================
-   CONFETTI STYLES
-   ===================================== */
+
 
 .confetti-container {
   position: absolute;
@@ -484,9 +465,7 @@ body {
   }
 }
 
-/* =====================================
-   AUDIO HINT
-   ===================================== */
+
 
 .audio-hint {
   position: absolute;
@@ -502,6 +481,31 @@ body {
   z-index: 100;
 }
 
+.music-toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.music-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
 @keyframes fadeInOut {
 
   0%,
@@ -514,11 +518,9 @@ body {
   }
 }
 
-/* =====================================
-   RESPONSIVE DESIGN
-   ===================================== */
 
-/* Tablet */
+
+
 @media (max-width: 768px) {
 
   .elephant-container,
@@ -548,7 +550,7 @@ body {
   }
 }
 
-/* Mobile */
+
 @media (max-width: 480px) {
 
   .elephant-container,
@@ -558,18 +560,18 @@ body {
   }
 
   .speech-bubble {
-    width: 80vw;
-    top: 15%;
-  }
-
-  .final-message {
     width: 90vw;
     top: 15%;
   }
 
+  .final-message {
+    width: 94vw;
+    top: 12%;
+  }
+
   .message-content {
-    font-size: clamp(0.7rem, 2.5vw, 0.85rem);
-    line-height: 1.4;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    line-height: 1.6;
   }
 
   .birthday-text h1 {
@@ -586,14 +588,14 @@ body {
   }
 }
 
-/* Small Mobile */
+
 @media (max-width: 375px) {
   .message-content {
-    font-size: clamp(0.65rem, 2vw, 0.8rem);
+    font-size: clamp(0.95rem, 3.5vw, 1.1rem);
   }
 
   .bubble-text {
-    font-size: clamp(0.8rem, 2.2vw, 1rem);
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
   }
 
   .finale-content h1 {
@@ -601,7 +603,7 @@ body {
   }
 }
 
-/* Landscape Mobile */
+
 @media (max-height: 500px) and (orientation: landscape) {
 
   .elephant-container,
@@ -639,9 +641,7 @@ body {
   }
 }
 
-/* =====================================
-   ACCESSIBILITY
-   ===================================== */
+
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -654,7 +654,7 @@ body {
   }
 }
 
-/* High contrast mode */
+
 @media (prefers-contrast: high) {
 
   .speech-bubble,
@@ -667,9 +667,7 @@ body {
   }
 }
 
-/* =====================================
-   PRINT STYLES
-   ===================================== */
+
 
 @media print {
   .birthday-container {
@@ -686,13 +684,13 @@ body {
   }
 }
 
-/* Canvas specific styles */
+
 canvas {
   display: block;
   touch-action: none;
 }
 
-/* Ensure 3D scenes take full space */
+
 .scene-1>div,
 .scene-4>div {
   width: 100%;
