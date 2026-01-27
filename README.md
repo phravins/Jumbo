@@ -1,4 +1,4 @@
-![Jumbo Banner](public/jumbo-banner.png)
+ ![Jumbo Banner](public/jumbo-banner.png)
 
 # Jumbo Birthday Surprise
 
@@ -41,4 +41,7 @@ Follow these steps to run the project locally:
 
 ## Credits
 
-Made by Jumbo.
+Made by Jumbo
+-------------
+(Note: Jumbo  is a subuser of phravins repository)
+--------------------------------------------------
