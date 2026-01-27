@@ -17,16 +17,12 @@ function App() {
   const [messageDisplayed, setMessageDisplayed] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-
-
   const giftContainerRef = useRef<HTMLDivElement>(null);
   const elephantRef = useRef<HTMLDivElement>(null);
   const speechBubbleRef = useRef<HTMLDivElement>(null);
   const cakeContainerRef = useRef<HTMLDivElement>(null);
   const messageRef = useRef<HTMLDivElement>(null);
   const finaleConfettiRef = useRef<HTMLDivElement>(null);
-
-
   const audioContextRef = useRef<AudioContext | null>(null);
   const backgroundMusicRef = useRef<HTMLAudioElement | null>(null);
 
@@ -267,11 +263,6 @@ function App() {
         ease: 'back.out(1.7)',
         onComplete: () => {
           setMessageDisplayed(true);
-
-          // Move to finale after message
-          setTimeout(() => {
-            setCurrentScene(6);
-          }, 6000);
         }
       });
     }
@@ -413,7 +404,7 @@ function App() {
 
 
       {currentScene === 5 && (
-        <div className="scene scene-5">
+        <div className="scene scene-5" onClick={() => setCurrentScene(6)}>
           <div ref={elephantRef} className={`elephant-final ${messageDisplayed ? 'message-displayed' : ''}`}>
             <img src="/elephant-bouquet.png" alt="Jumbo" className="elephant-image" />
             <img src="/party-hat.png" alt="Party Hat" className="party-hat" />
@@ -429,6 +420,19 @@ function App() {
               <p className="signature">Your lovable,<br />Jumbo 🐘</p>
             </div>
           </div>
+          {messageDisplayed && (
+            <div className="scene-hint" style={{
+              position: 'absolute',
+              bottom: '20px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              color: 'rgba(0,0,0,0.5)',
+              fontSize: '0.9rem',
+              animation: 'pulse 1.5s infinite'
+            }}>
+              (Tap anywhere to continue)
+            </div>
+          )}
         </div>
       )}
 
@@ -449,7 +453,7 @@ function App() {
 
       {!audioEnabled && currentScene === 1 && (
         <div className="audio-hint">
-          <p>🔊 Tap anywhere to enable sound</p>
+          <p>Tap anywhere to Open the gift</p>
         </div>
       )}
     </div>
