@@ -222,12 +222,16 @@ function AnimatedCake({ onCut }: Cake3DProps) {
           onCut();
 
 
-          gsap.to(knifeRef.current!.position, {
-            y: 2,
-            duration: 0.5,
-            ease: 'back.out',
-            onComplete: () => setIsCutting(false)
-          });
+          if (knifeRef.current) {
+            gsap.to(knifeRef.current.position, {
+              y: 2,
+              duration: 0.5,
+              ease: 'back.out',
+              onComplete: () => setIsCutting(false)
+            });
+          } else {
+            setIsCutting(false);
+          }
         }
       });
     }
