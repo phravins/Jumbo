@@ -19,6 +19,18 @@ A fully interactive 3D web experience designed to celebrate special moments. Thi
 - **GSAP (GreenSock)**: Used for complex timeline animations and smooth transitions
 - **Vite**: Extremely fast build tool and development server
 - **TypeScript**: Ensures code reliability and maintainability
+- **Tailwind CSS**: Utility-first CSS framework for styling
+- **Radix UI**: Unstyled, accessible components for building high-quality design systems
+- **Lucide React**: Beautiful & consistent icons
+- **Sonner**: An opinionated toast component for React
+- **Zod**: TypeScript-first schema declaration and validation library
+- **React Hook Form**: Performant, flexible and extensible forms with easy-to-use validation
+
+## Project Structure
+
+- **src/components**: Contains all React components used in the application.
+- **src/hooks**: Custom React hooks for shared logic.
+- **src/lib**: Utility functions and helper libraries.
 
 ## Getting Started
 
@@ -34,7 +46,12 @@ Follow these steps to run the project locally:
     npm run dev
     ```
 
-3.  **Build for Production**
+3.  **Lint Code**
+    ```bash
+    npm run lint
+    ```
+
+4.  **Build for Production**
     ```bash
     npm run build
     ```
@@ -45,3 +62,4 @@ Made by Jumbo
 -------------
 (Note: Jumbo  is a subuser of phravins repository)
 --------------------------------------------------
+
