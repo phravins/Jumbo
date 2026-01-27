@@ -453,7 +453,7 @@ function App() {
 
       {!audioEnabled && currentScene === 1 && (
         <div className="audio-hint">
-          <p>Tap anywhere to Open the gift</p>
+          <p>Tap the gift box to Open the gift</p>
         </div>
       )}
     </div>
