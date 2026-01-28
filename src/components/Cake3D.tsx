@@ -339,6 +339,17 @@ const isWebGLAvailable = () => {
 export default function Cake3D({ onCut }: Cake3DProps) {
   const webGLSupported = isWebGLAvailable();
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   if (!webGLSupported) {
     return (
       <div
@@ -361,6 +372,10 @@ export default function Cake3D({ onCut }: Cake3DProps) {
       </div>
     );
   }
+
+  // Adjust camera for mobile to ensure knife (at x=2) is visible
+  const cameraPosition: [number, number, number] = isMobile ? [0, 6, 11] : [0, 4, 7];
+  const cameraFov = isMobile ? 50 : 45;
 
   return (
     <div style={{ width: '100vw', height: '100vh', cursor: 'pointer', position: 'relative' }}>
@@ -386,7 +401,7 @@ export default function Cake3D({ onCut }: Cake3DProps) {
         }
       >
         <Canvas
-          camera={{ position: [0, 4, 7], fov: 45 }}
+          camera={{ position: cameraPosition, fov: cameraFov }}
           shadows
           gl={{ antialias: true, alpha: true }}
           onCreated={({ gl }: any) => {
