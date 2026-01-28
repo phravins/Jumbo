@@ -589,7 +589,24 @@ body {
   }
 
   .elephant-group {
-    width: 100vw;
+    display: none;
+    /* Hide the group as requested */
+  }
+
+  /* Scene 3: Center the single elephant with cake */
+  .elephant-with-cake {
+    bottom: auto;
+    /* Reset bottom */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    max-width: 350px;
+  }
+
+  .scene-3 {
+    justify-content: center;
+    /* Ensure flex container aligns center */
   }
 
   .party-hat {
