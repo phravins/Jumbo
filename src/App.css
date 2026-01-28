@@ -592,8 +592,10 @@ body {
   }
 
   .elephant-group {
-    display: none;
-    /* Hide the group as requested */
+    display: block;
+    /* Restore the group */
+    width: 100vw;
+    bottom: 0;
   }
 
   /* Scene 3: Center the single elephant with cake */
