@@ -556,26 +556,42 @@ body {
   .elephant-container,
   .elephant-with-cake,
   .elephant-final {
-    width: 80vw;
+    width: 70vw;
+    /* Reduced slightly to give more room */
+    bottom: 2%;
+    /* Ensure it doesn't float too high */
   }
 
   .speech-bubble {
-    width: 90vw;
-    top: 15%;
+    width: 95vw;
+    top: 5%;
+    /* Moved up significantly */
+    left: 50%;
+    transform: translateX(-50%) !important;
+    /* Force center */
   }
 
   .final-message {
-    width: 94vw;
-    top: 12%;
+    width: 95vw;
+    top: 2%;
+    /* Moved to very top */
+    height: auto;
+    max-height: 60vh;
+    /* Limit height to avoid overlap with elephant */
   }
 
   .message-content {
-    font-size: clamp(1rem, 4vw, 1.2rem);
-    line-height: 1.6;
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
+    line-height: 1.4;
+    width: 85%;
+    max-height: 100%;
+    padding-top: 20px;
+    /* Add some padding for the curve */
   }
 
   .birthday-text h1 {
     font-size: clamp(1.2rem, 5vw, 2rem);
+    margin-top: 10px;
   }
 
   .elephant-group {
