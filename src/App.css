@@ -570,9 +570,12 @@ body {
 
   .final-message {
     width: 95vw;
-    top: 2%;
+    top: auto;
+    bottom: 45%;
+    left: 50%;
+    transform: translateX(-50%) !important;
     height: auto;
-    max-height: 60vh;
+    max-height: 50vh;
   }
 
   .message-content {
